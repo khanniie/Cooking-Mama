@@ -5,8 +5,7 @@
     <meta charset="utf-8">
     <title>tracking.js - face with camera</title>
     <!--   <link rel="stylesheet" href="assets/demo.css"> -->
-    <script src="tracking-mobile.js"></script>
-    <script src="tracking/data/face-min.js"></script>
+    <script src="tracking/tracking.js"></script>
     <!--    <script src="../node_modules/dat.gui/build/dat.gui.min.js"></script> -->
     <!--   <script src="assets/stats.min.js"></script> -->
     <style>
@@ -22,3 +21,46 @@
     }
     </style>
 </head>
+<body>
+<video id="video" width="640" height="480" preload playsinline autoplay muted></video>
+            <canvas id="canvas" width="640" height="480"></canvas>
+    <script>
+        var count = 0;
+        var video = document.getElementById('video');
+        var front = false;
+        var constraints = { video: { facingMode: (front? "user" : "environment") } };
+        var canvas = document.getElementById('canvas');
+        var context = canvas.getContext('2d');
+        tracking.ColorTracker.registerColor('black and white', function(r,g,b){
+            if (( r>200 && g>200 && b>200)){
+            return true;
+        }
+        return false;
+        });
+        var colors = new tracking.ColorTracker(['yellow']);
+        navigator.mediaDevices.getUserMedia(constraints).then(function(mediastream){
+                    video.srcObject = mediastream;
+            video.onloadedmetadata = function(e) {
+                video.play();
+            };
+                  tracking.track('video', colors);
+                   colors.on('track',function(event){
+                                    event.data.forEach(function(rect){
+                                        if(count == 2){
+                                        context.clearRect(0, 0, canvas.width, canvas.height);
+                                        count =0;
+                                        }
+                                        context.beginPath();
+                                        console.log(rect.x, rect.y, rect.width, rect.height);
+                                        context.rect(rect.x, rect.y, rect.width, rect.height);
+                                        context.stroke();
+                                        context.closePath();
+                                        count++;
+
+
+        });
+      });
+
+        })
+    </script>
+</body>
