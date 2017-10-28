@@ -25,7 +25,9 @@
 <video id="video" width="640" height="480" preload playsinline autoplay muted></video>
             <canvas id="canvas" width="640" height="480"></canvas>
     <script>
+        var array = [new Rectangle(0,0,0,0), new Rectangle(0,0,0,0)];
         var count = 0;
+        var temprectx;
         var video = document.getElementById('video');
         var front = false;
         var constraints = { video: { facingMode: (front? "user" : "environment") } };
@@ -47,11 +49,19 @@
                    colors.on('track',function(event){
                                     event.data.forEach(function(rect){
                                         if(count == 2){
-                                        context.clearRect(0, 0, canvas.width, canvas.height);
-                                        count =0;
+                                            context.clearRect(0, 0, canvas.width, canvas.height);
+                                        if (arethere2rectangles(array[0], array[1]))
+                                            console.log("there are 2 rects!");
+                                        else
+                                            console.log("only one rect");
+                                            count = 0;
                                         }
+                                        array[count].x=rect.x;
+                                        array[count].y=rect.y;
+                                        array[count].width=rect.width;
+                                        array[count].height=rect.height;
                                         context.beginPath();
-                                        console.log(rect.x, rect.y, rect.width, rect.height);
+                                        //console.log(rect.x, rect.y, rect.width, rect.height);
                                         context.rect(rect.x, rect.y, rect.width, rect.height);
                                         context.stroke();
                                         context.closePath();
@@ -62,5 +72,20 @@
       });
 
         })
+
+    function Rectangle(x,y,width, height){
+        this.height = height;
+        this.width = width;
+        this.x = x;
+        this.y = y;
+    }
+
+    function arethere2rectangles(rect1, rect2){
+            if (((rect2.x<=rect1.x && rect2.x+rect2.width > rect1.x) || (rect1.x<=rect2.x && rect1.x+rect1.width > rect2.x)) && 
+                ((rect2.y<=rect1.y && rect2.y+rect2.height >rect1.y)|| (rect1.y<=rect2.y && rect1.y+rect1.height > rect2.y))) {
+                return false;
+            }
+            return true;
+    }
     </script>
 </body>
