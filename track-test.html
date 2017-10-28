@@ -27,39 +27,70 @@
     <script>
         var array = [new Rectangle(0,0,0,0), new Rectangle(0,0,0,0)];
         var count = 0;
-        var temprectx;
+        var temprectx = new Rectangle(0,0,0,0);
         var video = document.getElementById('video');
         var front = false;
         var constraints = { video: { facingMode: (front? "user" : "environment") } };
         var canvas = document.getElementById('canvas');
         var context = canvas.getContext('2d');
-        tracking.ColorTracker.registerColor('black and white', function(r,g,b){
+        tracking.ColorTracker.registerColor('white', function(r,g,b){
             if (( r>200 && g>200 && b>200)){
             return true;
         }
         return false;
         });
-        var colors = new tracking.ColorTracker(['yellow']);
+        ;
+        tracking.ColorTracker.registerColor('black', function(r,g,b){
+            if (( r<20 && g<20 && b<20)){
+            return true;
+        }
+        return false;
+        });
+        var colors = new tracking.ColorTracker(['black']);
+        var colored = new tracking.ColorTracker(['white']);
         navigator.mediaDevices.getUserMedia(constraints).then(function(mediastream){
                     video.srcObject = mediastream;
             video.onloadedmetadata = function(e) {
                 video.play();
             };
+                  tracking.track('video', colored);
+                   colored.on('track',function(event){
+                                    event.data.forEach(function(rect){
+                                        if(count == 4){
+                                            context.clearRect(0, 0, canvas.width, canvas.height);
+                                        /*if (arethere2rectangles(array[0], array[1]))
+                                            console.log("there are 2 rects!");
+                                        else
+                                            console.log("only one rect");
+                                            count = 0;*/
+                                        }
+                                        array[0].x=rect.x;
+                                        array[0].y=rect.y;
+                                        array[0].width=rect.width;
+                                        array[0].height=rect.height;
+                                        context.beginPath();
+                                        //console.log(rect.x, rect.y, rect.width, rect.height);
+                                        context.rect(rect.x, rect.y, rect.width, rect.height);
+                                        context.stroke();
+                                        context.closePath();
+                                        count++;
+                                    });
+                                });
                   tracking.track('video', colors);
                    colors.on('track',function(event){
                                     event.data.forEach(function(rect){
-                                        if(count == 2){
+                                        if(count == 4){
                                             context.clearRect(0, 0, canvas.width, canvas.height);
-                                        if (arethere2rectangles(array[0], array[1]))
+                                        /*if (arethere2rectangles(array[0], array[1]))
                                             console.log("there are 2 rects!");
                                         else
                                             console.log("only one rect");
                                             count = 0;
-                                        }
-                                        array[count].x=rect.x;
-                                        array[count].y=rect.y;
-                                        array[count].width=rect.width;
-                                        array[count].height=rect.height;
+                                        }*/
+                                        array[1].x=rect.x;
+                                        array[1].y=rect.y;
+                                        array[1].width=rect.width;
+                                        array[1].height=rect.height;
                                         context.beginPath();
                                         //console.log(rect.x, rect.y, rect.width, rect.height);
                                         context.rect(rect.x, rect.y, rect.width, rect.height);
@@ -86,6 +117,18 @@
                 return false;
             }
             return true;
+        }
+
+    function withinrect(rect1, rect2){
+        if ((rect1.x >= rect2.x) && (rect1.x + rect1.width <= rect2.x +rect2.width)){
+            if ((rect1.y >= rect2.y) && (rect1.y + rect1.height <= rect2.y + rect2.height))
+                return true;
+        } 
+        if ((rect2.x >= rect1.x) && (rect2.x + rect2.width <= rect1.x +rect1.width)){
+            if ((rect2.y >= rect1.y) && (rect2.y + rect2.height <= rect1.y + rect1.height))
+                return true;
+        } 
+        return false;
     }
     </script>
 </body>
