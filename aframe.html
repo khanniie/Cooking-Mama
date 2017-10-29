@@ -11,6 +11,7 @@
         left: 20%;
         top: 10%;
     }
+
     #source {
         opacity: 0;
     }
@@ -18,7 +19,7 @@
 </head>
 
 <body>
-    <video id="video" width="200" height="150" preload playsinline autoplay muted></video>
+        <video id="video" width="200" height="150" preload playsinline autoplay muted></video>
     <canvas id="canvas" width="200" height="150"></canvas>
     <script>
     var video = document.getElementById('video');
@@ -73,20 +74,22 @@
     });
 
     //not tracking blue yet! test it please
-    //tracking.track('video', blueTrack);
-    // blueTrack.on('track', function(event) {
-    //     count2 = 0;
-    //     event.data.forEach(function(rect) {
-    //         array[1].x = (array[1].x + rect.x)/2;
-    //         array[1].y = (array[1].y + rect.y)/2;
+    tracking.track('video', blueTrack);
+    blueTrack.on('track', function(event) {
+        count2 = 0;
+        event.data.forEach(function(rect) {
+            array[1].x = (array[1].x + rect.x)/2;
+            array[1].y = (array[1].y + rect.y)/2;
 
-    //         array[1].width = rect.width;
-    //         array[1].height = rect.height;
-    //         count2++
+            array[1].width = rect.width;
+            array[1].height = rect.height;
+            count2++
 
-    //     });
-    // });
-    //});
+        });
+        if (count == 1) {
+            onMouseUpdate(array);
+        }
+    });
 
     function Rectangle(x, y, width, height) {
         this.height = height;
@@ -103,12 +106,29 @@
             <img id="front" src="assets/front.jpg">
             <img id="ceiling" src="assets/ceiling.png">
             <img id="floor" src="assets/floor.jpg">
-            <img id="tableTexture" src="https://upload.wikimedia.org/wikipedia/commons/5/51/Red_wooden_furniture.jpg">
+            <img id="tableTexture" src="assets/wood.png">
+
+            <a-asset-item id="bowl" src="assets/bowl.obj"></a-asset-item>
+            <a-asset-item id="apple-obj" src="assets/Iphonex.obj"></a-asset-item>
+            <a-asset-item id="apple-mtl" src="assets/Iphonex.mtl"></a-asset-item>
+            <a-asset-item id="lefthand" src="assets/lefthand.obj"></a-asset-item>
+            <a-asset-item id="lefthandclose" src="assets/lefthandClose.obj"></a-asset-item>
+            <a-asset-item id="righthandclose" src="assets/righthandClose.obj"></a-asset-item>
+            <a-asset-item id="righthand" src="assets/righthand.obj"></a-asset-item>
+            <a-asset-item id="righthandmtl" src="assets/righthand.mtl"></a-asset-item>
+            <a-asset-item id="righthandclosemtl" src="assets/righthandClose.mtl"></a-asset-item>
+            <a-asset-item id="lefthandmtl" src="assets/lefthand.mtl"></a-asset-item>
+            <a-asset-item id="lefthandclosemtl" src="assets/lefthandClose.mtl"></a-asset-item>
+      <!--       <a-asset-item id="breadmtl" src="assets/Bread.mtl"></a-asset-item>
+            <a-asset-item id="bread" src="assets/Bread.obj"></a-asset-item> -->
         </a-assets>
         <a-entity>
             <a-entity camera look-controls position="0 1.75 0">
-                <a-entity id="cursor" position="0.5 -0.55 -0.5">
-                    <a-entity id="hand" position="0 0 -0.5" geometry="primitive: sphere; radius: 0.1;" material="color: black; shader: flat"></a-entity>
+                <a-entity id="leftCursor" position="-0.5 -0.55 -0.5">
+                    <a-entity id="leftHand" position="0 0 -0.5" obj-model="obj: #lefthand; mtl: #lefthandmtl" position="-0.25 1.2 -0.25" scale="0.05 0.05 0.05" rotation="-80 -20 0"></a-entity>
+                </a-entity>
+                <a-entity id="rightCursor" position="0.5 -0.55 -0.5">
+                    <a-entity id="rightHand" position="0 0 -0.5" obj-model="obj: #righthand; mtl: #righthandmtl" position="-0.25 1.2 -0.25" scale="0.05 0.05 0.05" rotation="-80 20 0"></a-entity>
                 </a-entity>
             </a-entity>
             <a-entity position="0 0 0" id="table">
@@ -120,58 +140,90 @@
                 <a-box cursor-listener id="box" color="#FFFFFF" scale="0.2 0.2 0.2" position="0 1.2 -1"></a-box>
             </a-entity>
             <a-entity light="type: ambient; color: #BBB"></a-entity>
-            <a-entity light="type: point; color: #FFF; intensity: 0.2" position="0 6.5 1"></a-entity>
-            <a-plane src="#front" height="6" width="8" rotation="0 0 0" position="0 3 -5"></a-plane>
+            <a-entity light="type: point; color: #FFF; intensity: 0.2" position="0 5.5 1"></a-entity>
+            <a-plane src="#front" height="5" width="7" rotation="0 0 0" position="0 2.5 -4.5"></a-plane>
             <a-sky color="#333"></a-sky>
-            <a-plane src="#floor" height="8" width="8" rotation="-90 0 0" position="0 0 -1"></a-plane>
-            <a-plane src="#wall2" height="6" width="8" rotation="0 90 0" position="-4 3 -1"></a-plane>
-            <a-plane src="#wall1" height="6" width="8" rotation="0 -90 0" position="4 3 -1"></a-plane>
-            <a-plane src="#ceiling" height="8" width="8" rotation="90 0 0" position="0 6 -1"></a-plane>
+            <a-plane src="#floor" height="7" width="7" rotation="-90 0 0" position="0 0 -1"></a-plane>
+            <a-plane src="#wall2" height="5" width="7" rotation="0 90 0" position="-3.5 2.5 -1"></a-plane>
+            <a-plane src="#wall1" height="5" width="7" rotation="0 -90 0" position="3.5 2.5 -1"></a-plane>
+            <a-plane src="#ceiling" height="7" width="7" rotation="90 0 0" position="0 5 -1"></a-plane>
+            <a-plane src="#wall3" height="5" width="7" rotation="0 180 0" position="0 2.5 2.5">
         </a-entity>
     </a-scene>
-    <script>
-    var x = null;
-    var y = null;
+        <script>
+    var leftx = null;
+    var lefty = null;
+    var rightx = null;
+    var righty = null;
     var setposyet = false;
     var grabbedFirst = false;
-    var cur = document.getElementById("cursor");
-    var hand = document.getElementById("hand");
+    var leftCur = document.getElementById("leftCursor");
+    var rightCur = document.getElementById("rightCursor");
+    var leftHand = document.getElementById("leftHand");
+    var rightHand = document.getElementById("rightHand");
     var box = document.getElementById("box");
 
     function onMouseUpdate(e) {
-        var curpos = cur.getAttribute('position');
+        var leftcurpos = leftCur.getAttribute('position');
+        var rightcurpos = rightCur.getAttribute('position');
 
         if (!setposyet) {
             var width = 200;
-            x = array[0].x;
-            y = cur.getAttribute('position').y;
-            var truex = ((x - width / 2) / width) * 3;
-            cur.setAttribute('position', { x: truex, y: curpos.y, z: curpos.z });
+            leftx = array[0].x;
+            lefty = leftCur.getAttribute('position').y;
+            var truexleft = ((leftx - width / 2) / width) * 3;
+
+            leftCur.setAttribute('position', { x: truexleft, y: leftcurpos.y, z: leftcurpos.z });
+
+            rightx = array[0].x;
+            righty = rightCur.getAttribute('position').y;
+            var truexright = ((rightx - width / 2) / width) * 3;
+
+            rightCur.setAttribute('position', { x: truexright, y: rightcurpos.y, z: rightcurpos.z });
+
             setposyet = true;
         }
 
-        if (x != null) {
-            cur.setAttribute('position', { x: curpos.x + front* (e[0].x - x) / 70, y: curpos.y, z: curpos.z });
+        if (leftx != null && rightx != null) {
+            leftCur.setAttribute('position', { x: leftcurpos.x + front* (e[0].x - leftx) / 70, y: leftcurpos.y, z: leftcurpos.z });
+            rightCur.setAttribute('position', { x: rightcurpos.x + front* (e[1].x - rightx) / 70, y: rightcurpos.y, z: rightcurpos.z });
         }
-        x = e[0].x;
-        y = e[0].y;
+        leftx = e[0].x;
+        lefty = e[0].y;
+        rightx = e[1].x;
+        righty = e[1].y;
 
         if(!grabbedFirst)
         stageOne();
     }
-
-    function stageOne(){
-        var handPos = new THREE.Vector3();
-        handPos.setFromMatrixPosition(hand.object3D.matrixWorld);
+    function isIntersect(obj){
+        var rightPos = new THREE.Vector3();
+        var leftPos = new THREE.Vector3();
+        leftPos.setFromMatrixPosition(leftHand.object3D.matrixWorld);
+        rightPos.setFromMatrixPosition(rightHand.object3D.matrixWorld);
 
         var boxPos = new THREE.Vector3();
-        boxPos.setFromMatrixPosition(box.object3D.matrixWorld);
-
-        if (Math.abs(handPos.x - boxPos.x) < 0.3) {
-            box.setAttribute('position', { x: 0, y: 0, z: -0.75 });
-            cur.appendChild(box);
+        boxPos.setFromMatrixPosition(obj.object3D.matrixWorld);
+        if((Math.abs(rightPos.x - boxPos.x) < 0.3)){
+            return rightCur;
         }
-        grabbedFirst = true;
+        else if(Math.abs(leftPos.x - boxPos.x) < 0.3){
+            return leftCur;
+        }
+        else{
+            return false;
+        }
+    }
+
+    function stageOne(){
+
+        var res = isIntersect(box);
+        if (res != false) {
+            box.setAttribute('position', { x: 0, y: 0, z: -0.75 });
+            res.appendChild(box);
+            grabbedFirst = true;
+        }
+        
     }
 
     </script>
