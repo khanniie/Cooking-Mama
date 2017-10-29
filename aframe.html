@@ -65,8 +65,8 @@
                 else
                     console.log("only one rect");
                     count = 0;*/
-                array[0].x = rect.x;
-                array[0].y = rect.y;
+                array[0].x = (array[0].x+rect.x)/2;
+                array[0].y = (array[0].y+rect.y)/2;
                 array[0].width = rect.width;
                 array[0].height = rect.height;
                 // if (!start) {
@@ -96,8 +96,8 @@
         blueTrack.on('track', function(event) {
             count2 = 0;
             event.data.forEach(function(rect) {
-                array[1].x = rect.x;
-                array[1].y = rect.y;
+                array[1].x = (array[1].x + rect.x)/2;
+                array[1].y = (array[1].y + rect.y)/2;
 
                 array[1].width = rect.width;
                 array[1].height = rect.height;
