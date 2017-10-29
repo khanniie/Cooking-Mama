@@ -21,7 +21,7 @@
 <body>
     <video id="video" width="200" height="150" preload playsinline autoplay muted></video>
     <canvas id="canvas" width="200" height="150"></canvas>
-    <script>
+     <script>
     var video = document.getElementById('video');
     var canvas = document.getElementById('canvas');
     var context = canvas.getContext('2d');
@@ -29,7 +29,7 @@
     var constraints = { video: { facingMode: "environment" } };
 
     var array = [new Rectangle(0, 0, 0, 0), new Rectangle(0, 0, 0, 0)];
-    var front = 1;
+    var invert = -1;
 
     tracking.ColorTracker.registerColor('blue', function(r, g, b) {
         if ((r < 80 && g < 120 && (b > r + g || b > 180))) {
@@ -40,6 +40,7 @@
     var blueTrack = new tracking.ColorTracker(['cyan']);
     var yellowTrack = new tracking.ColorTracker(['yellow']);
 
+<<<<<<< HEAD
     // navigator.mediaDevices.getUserMedia(constraints).then(function(mediastream) {
     //     video.srcObject = mediastream;
     //     video.onloadedmetadata = function(e) {
@@ -58,19 +59,42 @@
     //     })
     // });
     //
+=======
+>>>>>>> a219f79bce42dc83af9a6eae79dd8beb55353067
     navigator.mediaDevices.getUserMedia(constraints).then(function(mediastream) {
         video.srcObject = mediastream;
         video.onloadedmetadata = function(e) {
             video.play();
             console.log(e);
+<<<<<<< HEAD
         };
+=======
+        }
+    }).catch(function() {
+        var constraints = { video: { facingMode: "user" } };
+        console.log("no rear camera, using other one");
+        //front = -1;
+        navigator.mediaDevices.getUserMedia(constraints).then(function(mediastream) {
+            video.srcObject = mediastream;
+            video.onloadedmetadata = function(e) {
+                video.play();
+            }
+        })
+>>>>>>> a219f79bce42dc83af9a6eae79dd8beb55353067
     });
+    // navigator.mediaDevices.getUserMedia(constraints).then(function(mediastream) {
+    //     video.srcObject = mediastream;
+    //     video.onloadedmetadata = function(e) {
+    //         video.play();
+    //         console.log(e);
+    //     }
+    // });
 
-    if ((navigator.userAgent).indexOf("Mobile"))
-    {
-        alert("you're on mobile!");
-        front = -1;
-    }
+    // if ((navigator.userAgent).indexOf("Mobile"))
+    // {
+    //     alert("you're on mobile!");
+    //     front = -1;
+    // }
 
     tracking.track('video', yellowTrack);
     yellowTrack.on('track', function(event) {
@@ -114,14 +138,14 @@
     </script>
     <a-scene>
         <a-assets>
-            <img id="boxTexture" src="https://i.imgur.com/mYmmbrp.jpg">
-            <img id="wall2" src="assets/wall2.png">
-            <img id="wall1" src="assets/wall1.jpg">
+            <img id="wall2" src="assets/wall2.jpg">
+            <img id="wall1" src="assets/wall2.jpg">
+            <img id="wall3" src="assets/wall2.jpg">
             <img id="front" src="assets/front.jpg">
             <img id="ceiling" src="assets/ceiling.png">
             <img id="floor" src="assets/floor.jpg">
             <img id="tableTexture" src="assets/wood.png">
-            <a-asset-item id="bowl" src="assets/bowl.obj"></a-asset-item>
+            <a-asset-item id="bowl" src="assets/Bowl.obj"></a-asset-item>
             <a-asset-item id="apple-obj" src="assets/Iphonex.obj"></a-asset-item>
             <a-asset-item id="apple-mtl" src="assets/Iphonex.mtl"></a-asset-item>
             <a-asset-item id="lefthand" src="assets/lefthand.obj"></a-asset-item>
@@ -150,7 +174,9 @@
                 <a-box src="#tableTexture" position="-0.95 0.5 -0.55" rotation="0 0 0" scale="0.1 1 0.1"></a-box>
                 <a-box src="#tableTexture" position="0.95 0.5 -1.45" rotation="0 0 0" scale="0.1 1 0.1"></a-box>
                 <a-box src="#tableTexture" position="-0.95 0.5 -1.45" rotation="0 0 0" scale="0.1 1 0.1"></a-box>
-                <a-box cursor-listener id="box" color="#FFFFFF" scale="0.2 0.2 0.2" position="0 1.2 -1"></a-box>
+                <a-entity obj-model="obj: #bowl ; mtl: #bowlmtl" rotation="-90 0 0" position="-1 1.035 -1" scale="0.005 0.005 0.005"></a-entity>
+                <a-entity obj-model="obj: #apple-obj; mtl: #apple-mtl" id="apple" rotation="-90 0 0" position="0.25 1.2 -0.9" scale="0.0005 0.0005 0.0005"></a-entity>
+                <!--          <a-box cursor-listener id="box" color="#FFFFFF" scale="0.2 0.2 0.2" position="0 1.2 -1"></a-box> -->
             </a-entity>
             <a-entity light="type: ambient; color: #BBB"></a-entity>
             <a-entity light="type: point; color: #FFF; intensity: 0.2" position="0 5.5 1"></a-entity>
@@ -163,7 +189,7 @@
             <a-plane src="#wall3" height="5" width="7" rotation="0 180 0" position="0 2.5 2.5">
         </a-entity>
     </a-scene>
-    <script>
+       <script>
     var leftx = null;
     var lefty = null;
     var rightx = null;
@@ -174,7 +200,7 @@
     var rightCur = document.getElementById("rightCursor");
     var leftHand = document.getElementById("leftHand");
     var rightHand = document.getElementById("rightHand");
-    var box = document.getElementById("box");
+    var box = document.getElementById("apple");
 
     function onMouseUpdate(e) {
         var leftcurpos = leftCur.getAttribute('position');
@@ -198,8 +224,8 @@
         }
 
         if (leftx != null && rightx != null) {
-            leftCur.setAttribute('position', { x: leftcurpos.x +  (e[0].x - leftx) / 70, y: leftcurpos.y, z: leftcurpos.z });
-            rightCur.setAttribute('position', { x: rightcurpos.x + (e[1].x - rightx) / 70, y: rightcurpos.y, z: rightcurpos.z });
+            leftCur.setAttribute('position', { x: leftcurpos.x + invert* (e[0].x - leftx) / 70, y: leftcurpos.y, z: leftcurpos.z });
+            rightCur.setAttribute('position', { x: rightcurpos.x + invert*(e[1].x - rightx) / 70, y: rightcurpos.y, z: rightcurpos.z });
         }
         leftx = e[0].x;
         lefty = e[0].y;
@@ -218,9 +244,9 @@
 
         var boxPos = new THREE.Vector3();
         boxPos.setFromMatrixPosition(obj.object3D.matrixWorld);
-        if ((Math.abs(rightPos.x - boxPos.x) < 0.3)) {
+        if ((Math.abs(rightPos.x - boxPos.x) < 0.05)) {
             return rightCur;
-        } else if (Math.abs(leftPos.x - boxPos.x) < 0.3) {
+        } else if (Math.abs(leftPos.x - boxPos.x) < 0.05) {
             return leftCur;
         } else {
             return false;
@@ -229,10 +255,10 @@
 
     function stageOne() {
 
-        var res = isIntersect(box);
+        var res = isIntersect(apple);
         if (res != false) {
-            box.setAttribute('position', { x: 0, y: 0, z: -0.75 });
-            res.appendChild(box);
+            apple.setAttribute('position', { x: 0, y: 0, z: -0.75 });
+            res.appendChild(apple);
             grabbedFirst = true;
         }
 
