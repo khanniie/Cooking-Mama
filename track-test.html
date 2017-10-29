@@ -22,8 +22,8 @@
     </style>
 </head>
 <body>
-<video id="video" width="640" height="480" preload playsinline autoplay muted></video>
-            <canvas id="canvas" width="640" height="480"></canvas>
+<video id="video" width="800" height="600" preload playsinline autoplay muted></video>
+            <canvas id="canvas" width="800" height="600"></canvas>
     <script>
         screen.orientation.lock('landscape').catch(function(){});
         var array = [new Rectangle(0,0,0,0), new Rectangle(0,0,0,0)];
@@ -71,18 +71,7 @@
                                             array[0].height=rect.height;
                                         if(!start){
                                                 temp = (rect.width*rect.height)/prevArea;
-                                            if( temp > 0.5 && temp < 4){
-                                                if (temp>1.01){
-                                                    //console.log("closer", temp);
-                                                }
-                                                else if (temp<0.99){
-                                                    //console.log("farther", temp);
-                                                }
-                                                else if( temp ==1){
-                                                    //console.log("statiopnary");
-                                                }
-                                                depth *= 1/temp;  
-                                                console.log(depth);                                              
+                                            if( temp > 0.5 && temp < 4){                                             
                                             }
                                         //% change has to correspond to alrdy located depth, for example close: larger percentage change corresponds to smaller change
                                         //Where there are outlers- what outliers?
@@ -96,6 +85,10 @@
                                             context.rect(array[0].x, array[0].y, array[0].width, array[0].height);
                                             context.stroke();
                                             context.closePath();
+                                            if(!start){
+                                                depth *= 1/temp;  
+                                                console.log(temp, depth); 
+                                            }
                                             start = false;
                                     } else if (count >1){
                                         console.log("detecting too many yellow things");
@@ -121,10 +114,7 @@
                                                 }
                                                 else if( temp2 ==1){
                                                     //console.log("statiopnary");
-                                                }
-                                                depth2 *= 1/temp2;
-                                                console.log(array[1].x, array[1].y);
-                                                
+                                                }                                             
                                             }
                                         }
                                         //% change has to correspond to alrdy located depth, for example close: larger percentage change corresponds to smaller change
@@ -140,6 +130,8 @@
                                             context.rect(array[1].x, array[1].y, array[1].width, array[1].height);
                                             context.stroke();
                                             context.closePath();
+                                              if(!start)
+                                                depth2 *= 1/temp2;     
                                             start2 = false;
                                             setTimeout(function(){}, 100);
                                         } else if (count2 >1){
