@@ -3,8 +3,8 @@
 
 <head>
     <meta charset="utf-8">
-    <title>tracking.js - face with camera</title>
-    <script src="tracking.js-master/build/tracking.js"></script>
+    <title>tracking.js - face with camera</title>    
+    <script src="tracking/tracking.js"></script>
     
     <style>
         video,
@@ -49,7 +49,8 @@
             video.onloadedmetadata = function(e) {
                 video.play();
             };
-            tracking.track('video', yellow, green);
+            tracking.track('video', yellow);
+            tracking.track('video', green);
             green.on('track',function(event){
               event.data.forEach(function(rect){
                  context.beginPath();
