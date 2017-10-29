@@ -27,12 +27,12 @@
     var context = canvas.getContext('2d');
 
     screen.orientation.lock('landscape').catch(function() {});
-    var front = false;
-    var constraints = { video: { facingMode: (front ? "user" : "environment") } };
+    //var front = false;
+    var constraints = { video: { facingMode: { exact: "environment" } } };
 
     var array = [new Rectangle(0, 0, 0, 0), new Rectangle(0, 0, 0, 0)];
     var count = 0;
-
+    var front = 1;
     var prevArea;
     var prevArea2;
     var temp;
@@ -54,93 +54,47 @@
         video.srcObject = mediastream;
         video.onloadedmetadata = function(e) {
             video.play();
-        };
-        tracking.track('video', yellowTrack);
-        yellowTrack.on('track', function(event) {
-            count = 0;
-            //context.clearRect(0, 0, canvas.width, canvas.height);
-            event.data.forEach(function(rect) {
-                /*if (arethere2rectangles(array[0], array[1]))
-                    console.log("there are 2 rects!");
-                else
-                    console.log("only one rect");
-                    count = 0;*/
-                array[0].x = (array[0].x+rect.x)/2;
-                array[0].y = (array[0].y+rect.y)/2;
-                array[0].width = rect.width;
-                array[0].height = rect.height;
-                // if (!start) {
-                //     temp = (rect.width * rect.height) / prevArea;
-                //     if (temp > 0.5 && temp < 4) {}
-                // }
-                count++;
-            })
-            if ((start || (temp > 0.5 && temp < 4)) && count == 1) {
-                // prevArea = array[0].width * array[0].height;
-                // context.beginPath();
-                // context.rect(array[0].x, array[0].y, array[0].width, array[0].height);
-
-                // context.stroke();
-                // context.closePath();
-                onMouseUpdate(array);
-                //     if (!start) {
-                //         depth *= 1 / temp;
-                //         //console.log(temp, depth);
-                //     }
-                //     start = false;
-                // } else if (count > 1) {
-                //     //console.log("detecting too many yellow things");
+            console.log(e);
+        }
+    }).catch(function() {
+        var constraints = { video: { facingMode: "user" } };
+        console.log("no rear camera, using other one");
+        front = -1;
+        navigator.mediaDevices.getUserMedia(constraints).then(function(mediastream) {
+            video.srcObject = mediastream;
+            video.onloadedmetadata = function(e) {
+                video.play();
             }
-        });
-        tracking.track('video', blueTrack);
-        blueTrack.on('track', function(event) {
-            count2 = 0;
-            event.data.forEach(function(rect) {
-                array[1].x = (array[1].x + rect.x)/2;
-                array[1].y = (array[1].y + rect.y)/2;
-
-                array[1].width = rect.width;
-                array[1].height = rect.height;
-                // if (!start2) {
-                //     temp2 = (rect.width * rect.height) / prevArea2;
-                //     if (temp2 > 0.5 && temp2 < 4) {
-                //         if (temp2 > 1.01) {
-                //             //console.log("closer", temp);
-                //         } else if (temp2 < 0.99) {
-                //             //console.log("farther", temp);
-                //         } else if (temp2 == 1) {
-                //             //console.log("statiopnary");
-                //         }
-                //     }
-                // }
-                //% change has to correspond to alrdy located depth, for example close: larger percentage change corresponds to smaller change
-                //Where there are outlers- what outliers?
-                count2++
-
-            });
-            // if ((start2 || (temp2 > 0.5 && temp2 < 4)) && count2 == 1) {
-            //     prevArea2 = array[1].width * array[1].height;
-
-            //     // context.beginPath();
-            //     // //console.log(rect.x, rect.y, rect.width, rect.height);
-            //     // context.rect(array[1].x, array[1].y, array[1].width, array[1].height);
-            //     // //console.log(array);
-            //     // context.stroke();
-            //     // context.closePath();
-            //     onMouseUpdate(array);
-            //     if (!start)
-            //         depth2 *= 1 / temp2;
-            //     start2 = false;
-            //     setTimeout(function() {}, 100);
-            // } else if (count2 > 1) {
-            //     //console.log("detecting too many blue things");
-            // }
-        });
-
-
-
-
+        })
     });
+    tracking.track('video', yellowTrack);
+    yellowTrack.on('track', function(event) {
+        count = 0;
+        event.data.forEach(function(rect) {
+            array[0].x = (array[0].x + rect.x) / 2;
+            array[0].y = (array[0].y + rect.y) / 2;
+            array[0].width = rect.width;
+            array[0].height = rect.height;
+            count++;
+        })
+        if (count == 1) {
+            onMouseUpdate(array);
+        }
+    });
+    //tracking.track('video', blueTrack);
+    // blueTrack.on('track', function(event) {
+    //     count2 = 0;
+    //     event.data.forEach(function(rect) {
+    //         array[1].x = (array[1].x + rect.x)/2;
+    //         array[1].y = (array[1].y + rect.y)/2;
+
+    //         array[1].width = rect.width;
+    //         array[1].height = rect.height;
+    //         count2++
+
+    //     });
+    // });
+    //});
 
     function Rectangle(x, y, width, height) {
         this.height = height;
@@ -148,67 +102,6 @@
         this.x = x;
         this.y = y;
     }
-
-    // function arethere2rectangles(rect1, rect2) {
-    //     if (((rect2.x <= rect1.x && rect2.x + rect2.width > rect1.x) || (rect1.x <= rect2.x && rect1.x + rect1.width > rect2.x)) &&
-    //         ((rect2.y <= rect1.y && rect2.y + rect2.height > rect1.y) || (rect1.y <= rect2.y && rect1.y + rect1.height > rect2.y))) {
-    //         return false;
-    //     }
-    //     return true;
-    // }
-    //Not sure what this is for but i wrote it so
-    // function withinrect(rect1, rect2) {
-    //     if ((rect1.x >= rect2.x) && (rect1.x + rect1.width <= rect2.x + rect2.width)) {
-    //         if ((rect1.y >= rect2.y) && (rect1.y + rect1.height <= rect2.y + rect2.height))
-    //             return true;
-    //     }
-    //     if ((rect2.x >= rect1.x) && (rect2.x + rect2.width <= rect1.x + rect1.width)) {
-    //         if ((rect2.y >= rect1.y) && (rect2.y + rect2.height <= rect1.y + rect1.height))
-    //             return true;
-    //     }
-    //     return false;
-    // }
-
-
-    // document.addEventListener('mousemove', onMouseUpdate, false);
-    // document.body.addEventListener('mouseenter', onMouseUpdate, false);
-    // document.addEventListener('mousedown', function() {
-    //     mousedown = true;
-    // });
-    // document.addEventListener('mouseup', function() {
-    //     mousedown = false;
-    // });
-    // function onMouseStart(e){
-
-
-    // }
-    //     function onMouseUpdate(e) {
-    //         console.log(array);
-
-    //         if (!e.isTrusted) return false;
-    // var temp = cur.getAttribute('position');
-    //         if (!setposyet) {
-    //             var width = window.innerWidth || document.body.clientWidth;
-    //             x = e.pageX;
-    //             var truex = ((x - width / 2) / width) * 3;
-    //             y = e.pageY;
-    //             cur.setAttribute('position', { x: truex, y: temp.y, z: temp.z });
-    //             // console.log(e, x, width, truex);
-    //             setposyet = true;
-    //         }
-
-
-    //         // console.log(temp.x);
-    //         if (x != null && !mousedown) {
-    //             //console.log(tempx.x+ (e.pageX - x)/100);
-    //             cur.setAttribute('position', { x: temp.x + (e.pageX - x) / 300, y: temp.y, z: temp.z });
-    //         }
-    //         x = e.pageX;
-    //         y = e.pageY;
-    //     }
-    //document.onload = function(){
-
-    //}
     </script>
     <a-scene>
         <a-assets>
@@ -257,7 +150,6 @@
     <script>
     var x = null;
     var y = null;
-    var mousedown = false;
     var setposyet = false;
     var grabbedFirst = false;
     var cur = document.getElementById("cursor");
@@ -265,10 +157,6 @@
     var box = document.getElementById("box");
 
     function onMouseUpdate(e) {
-
-        // console.log(array);
-
-        // if (!e.isTrusted) return false;
         var curpos = cur.getAttribute('position');
 
         if (!setposyet) {
@@ -276,17 +164,13 @@
             x = array[0].x;
             y = cur.getAttribute('position').y;
             var truex = ((x - width / 2) / width) * 3;
-            // y = e.pageY;
             cur.setAttribute('position', { x: truex, y: curpos.y, z: curpos.z });
-            // console.log(e, x, width, truex);
             setposyet = true;
         }
 
-
-        //console.log(curpos.x, curpos.y);
-        if (x != null && !mousedown) {
+        if (x != null) {
             // cur.setAttribute('position', { x: curpos.x + -1 * (e[0].x - x) / 300, y: curpos.y + -1 * (e[0].y - y) /1000, z: curpos.z });
-            cur.setAttribute('position', { x: curpos.x + -1 * (e[0].x - x) / 100, y: curpos.y, z: curpos.z });
+            cur.setAttribute('position', { x: curpos.x + front* (e[0].x - x) / 70, y: curpos.y, z: curpos.z });
 
             //console.log(e[0].x , curpos.x, -1*(e[0].x - x) / 300);
         }
@@ -300,8 +184,8 @@
         boxPos.setFromMatrixPosition(box.object3D.matrixWorld);
         //console.log(handPos, boxPos);
 
-        if(!grabbedFirst && Math.abs(handPos.x -boxPos.x) < 0.3){
-            box.setAttribute('position', {x: 0, y: 0, z: -0.75});
+        if (!grabbedFirst && Math.abs(handPos.x - boxPos.x) < 0.3) {
+            box.setAttribute('position', { x: 0, y: 0, z: -0.75 });
             cur.appendChild(box);
         }
     }
