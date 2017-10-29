@@ -49,7 +49,7 @@
     }).catch(function() {
         var constraints = { video: { facingMode: "user" } };
         console.log("no rear camera, using other one");
-        front = -1;
+        //front = -1;
         navigator.mediaDevices.getUserMedia(constraints).then(function(mediastream) {
             video.srcObject = mediastream;
             video.onloadedmetadata = function(e) {
