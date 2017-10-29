@@ -19,23 +19,13 @@
     #source {
         opacity: 0;
     }
-    
-    @media (orientation: portrait) {
-  body {
-    -webkit-transform: rotate(-90deg);
-    -moz-transform: rotate(-90deg);
-    -o-transform: rotate(-90deg);
-    -ms-transform: rotate(-90deg);
-    transform: rotate(-90deg);
-  }
-}
+
     </style>
 </head>
 <body>
 <video id="video" width="800" height="600" preload playsinline autoplay muted></video>
             <canvas id="canvas" width="800" height="600"></canvas>
     <script>
-        screen.orientation.lock('landscape').catch(function(){});
         var array = [new Rectangle(0,0,0,0), new Rectangle(0,0,0,0)];
         var count = 0;
         var temprectx = new Rectangle(0,0,0,0);
