@@ -10,7 +10,9 @@ of each other in the color spectrum
 Throughout this demo, we will be showing how a user can interact with the environment to drop food items 
 into a bowl as part of simulated steps towards a finished product. Our environments include multiple 
 food objects, and we envision the use of two cursors in an omnidirectional plane
-as well as depth implementation in the future.
+as well as depth implementation in the future. In this case, tracking .js has limitations in terms
+of optimisation for calculations of relative depth and we have thus omitted the aspect in favor of
+smoother gameplay.
 
 Users will first receive a prompt in text rendered as text-geometry. This prompt will deliver the steps
 required to complete the stage. As can be seen, our player has to drop ingredients into the bowl.
