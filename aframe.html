@@ -3,10 +3,213 @@
 <head>
     <script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
     <script src="https://unpkg.com/aframe-environment-component/dist/aframe-environment-component.min.js"></script>
-</head>
+    <script src="tracking/tracking.js"></script>
+    <style>
+    video,
+    canvas {
+        position: absolute;
+        left: 20%;
+        top: 10%;
+    }
+
+    #source {
+        opacity: 0;
+    }
+    </style>
 </head>
 
 <body>
+    <video id="video" width="800" height="600" preload playsinline autoplay muted></video>
+    <canvas id="canvas" width="800" height="600"></canvas>
+    <script>
+    var video = document.getElementById('video');
+    var canvas = document.getElementById('canvas');
+    var context = canvas.getContext('2d');
+
+    screen.orientation.lock('landscape').catch(function() {});
+    var front = false;
+    var constraints = { video: { facingMode: (front ? "user" : "environment") } };
+
+    var array = [new Rectangle(0, 0, 0, 0), new Rectangle(0, 0, 0, 0)];
+    var count = 0;
+
+    var prevArea;
+    var prevArea2;
+    var temp;
+    var temp2;
+    var depth = 5;
+    var depth2 = 5;
+    var start = true;
+    var start2 = true;
+
+    tracking.ColorTracker.registerColor('blue', function(r, g, b) {
+        if ((r < 80 && g < 120 && (b > r + g || b > 180))) {
+            return true;
+        }
+        return false;
+    });
+    var blueTrack = new tracking.ColorTracker(['blue']);
+    var yellowTrack = new tracking.ColorTracker(['yellow']);
+    navigator.mediaDevices.getUserMedia(constraints).then(function(mediastream) {
+        video.srcObject = mediastream;
+        video.onloadedmetadata = function(e) {
+            video.play();
+        };
+        tracking.track('video', yellowTrack);
+        yellowTrack.on('track', function(event) {
+            count = 0;
+            //context.clearRect(0, 0, canvas.width, canvas.height);
+            event.data.forEach(function(rect) {
+                /*if (arethere2rectangles(array[0], array[1]))
+                    console.log("there are 2 rects!");
+                else
+                    console.log("only one rect");
+                    count = 0;*/
+                array[0].x = rect.x;
+                array[0].y = rect.y;
+                array[0].width = rect.width;
+                array[0].height = rect.height;
+                // if (!start) {
+                //     temp = (rect.width * rect.height) / prevArea;
+                //     if (temp > 0.5 && temp < 4) {}
+                // }
+                count++;
+            })
+            if ((start || (temp > 0.5 && temp < 4)) && count == 1) {
+                // prevArea = array[0].width * array[0].height;
+                // context.beginPath();
+                // context.rect(array[0].x, array[0].y, array[0].width, array[0].height);
+
+                // context.stroke();
+                // context.closePath();
+                onMouseUpdate(array);
+                //     if (!start) {
+                //         depth *= 1 / temp;
+                //         //console.log(temp, depth);
+                //     }
+                //     start = false;
+                // } else if (count > 1) {
+                //     //console.log("detecting too many yellow things");
+            }
+        });
+        tracking.track('video', blueTrack);
+        blueTrack.on('track', function(event) {
+            count2 = 0;
+            event.data.forEach(function(rect) {
+                array[1].x = rect.x;
+                array[1].y = rect.y;
+
+                array[1].width = rect.width;
+                array[1].height = rect.height;
+                // if (!start2) {
+                //     temp2 = (rect.width * rect.height) / prevArea2;
+                //     if (temp2 > 0.5 && temp2 < 4) {
+                //         if (temp2 > 1.01) {
+                //             //console.log("closer", temp);
+                //         } else if (temp2 < 0.99) {
+                //             //console.log("farther", temp);
+                //         } else if (temp2 == 1) {
+                //             //console.log("statiopnary");
+                //         }
+                //     }
+                // }
+                //% change has to correspond to alrdy located depth, for example close: larger percentage change corresponds to smaller change
+                //Where there are outlers- what outliers?
+                count2++
+
+            });
+            // if ((start2 || (temp2 > 0.5 && temp2 < 4)) && count2 == 1) {
+            //     prevArea2 = array[1].width * array[1].height;
+
+            //     // context.beginPath();
+            //     // //console.log(rect.x, rect.y, rect.width, rect.height);
+            //     // context.rect(array[1].x, array[1].y, array[1].width, array[1].height);
+            //     // //console.log(array);
+            //     // context.stroke();
+            //     // context.closePath();
+            //     onMouseUpdate(array);
+            //     if (!start)
+            //         depth2 *= 1 / temp2;
+            //     start2 = false;
+            //     setTimeout(function() {}, 100);
+            // } else if (count2 > 1) {
+            //     //console.log("detecting too many blue things");
+            // }
+        });
+
+
+
+
+    });
+
+    function Rectangle(x, y, width, height) {
+        this.height = height;
+        this.width = width;
+        this.x = x;
+        this.y = y;
+    }
+
+    // function arethere2rectangles(rect1, rect2) {
+    //     if (((rect2.x <= rect1.x && rect2.x + rect2.width > rect1.x) || (rect1.x <= rect2.x && rect1.x + rect1.width > rect2.x)) &&
+    //         ((rect2.y <= rect1.y && rect2.y + rect2.height > rect1.y) || (rect1.y <= rect2.y && rect1.y + rect1.height > rect2.y))) {
+    //         return false;
+    //     }
+    //     return true;
+    // }
+    //Not sure what this is for but i wrote it so
+    // function withinrect(rect1, rect2) {
+    //     if ((rect1.x >= rect2.x) && (rect1.x + rect1.width <= rect2.x + rect2.width)) {
+    //         if ((rect1.y >= rect2.y) && (rect1.y + rect1.height <= rect2.y + rect2.height))
+    //             return true;
+    //     }
+    //     if ((rect2.x >= rect1.x) && (rect2.x + rect2.width <= rect1.x + rect1.width)) {
+    //         if ((rect2.y >= rect1.y) && (rect2.y + rect2.height <= rect1.y + rect1.height))
+    //             return true;
+    //     }
+    //     return false;
+    // }
+
+
+    // document.addEventListener('mousemove', onMouseUpdate, false);
+    // document.body.addEventListener('mouseenter', onMouseUpdate, false);
+    // document.addEventListener('mousedown', function() {
+    //     mousedown = true;
+    // });
+    // document.addEventListener('mouseup', function() {
+    //     mousedown = false;
+    // });
+    // function onMouseStart(e){
+
+
+    // }
+    //     function onMouseUpdate(e) {
+    //         console.log(array);
+
+    //         if (!e.isTrusted) return false;
+    // var temp = cur.getAttribute('position');
+    //         if (!setposyet) {
+    //             var width = window.innerWidth || document.body.clientWidth;
+    //             x = e.pageX;
+    //             var truex = ((x - width / 2) / width) * 3;
+    //             y = e.pageY;
+    //             cur.setAttribute('position', { x: truex, y: temp.y, z: temp.z });
+    //             // console.log(e, x, width, truex);
+    //             setposyet = true;
+    //         }
+
+
+    //         // console.log(temp.x);
+    //         if (x != null && !mousedown) {
+    //             //console.log(tempx.x+ (e.pageX - x)/100);
+    //             cur.setAttribute('position', { x: temp.x + (e.pageX - x) / 300, y: temp.y, z: temp.z });
+    //         }
+    //         x = e.pageX;
+    //         y = e.pageY;
+    //     }
+    //document.onload = function(){
+
+    //}
+    </script>
     <a-scene>
         <a-assets>
             <img id="boxTexture" src="https://i.imgur.com/mYmmbrp.jpg">
@@ -27,16 +230,19 @@
   <a-plane src="#ceiling" height="8" width="8" rotation="90 0 0" position="0 7.5 -1"></a-plane> -->
         <a-entity>
             <a-entity camera look-controls position="0 1.75 0">
-                <a-entity id="cursor" cursor="fuse: true; fuseTimeout: 500" position="0 -0.55 -1" geometry="primitive: sphere; radius: 0.1;" material="color: black; shader: flat">
+                <a-entity id="cursor" position="0.5 -0.55 -0.5">
+                    <a-entity id="hand" position="0 0 -0.5" geometry="primitive: sphere; radius: 0.1;" material="color: black; shader: flat"></a-entity>
                 </a-entity>
             </a-entity>
-            <a-entity position="0 0 0">
+            <a-entity position="0 0 0" id="table">
                 <a-box src="#tableTexture" position="0 1 -1" rotation="0 0 0" scale="2 0.1 1"></a-box>
                 <a-box src="#tableTexture" position="0.95 0.5 -0.55" rotation="0 0 0" scale="0.1 1 0.1"></a-box>
                 <a-box src="#tableTexture" position="-0.95 0.5 -0.55" rotation="0 0 0" scale="0.1 1 0.1"></a-box>
                 <a-box src="#tableTexture" position="0.95 0.5 -1.45" rotation="0 0 0" scale="0.1 1 0.1"></a-box>
                 <a-box src="#tableTexture" position="-0.95 0.5 -1.45" rotation="0 0 0" scale="0.1 1 0.1"></a-box>
-                <a-box cursor-listener color="FFFFFF" position="0 1.2 -1" scale="0.2 0.2 0.2"></a-box>
+                <!--   <a-entity  scale="1 1 1" position="0 1.2 -1"> -->
+                <a-box cursor-listener id="box" color="#FFFFFF" scale="0.2 0.2 0.2" position="0 1.2 -1"></a-box>
+                <!--  </a-entity> -->
             </a-entity>
             <a-entity light="type: ambient; color: #BBB"></a-entity>
             <a-entity light="type: point; color: #FFF; intensity: 0.2" position="0 6.5 1"></a-entity>
@@ -53,53 +259,53 @@
     var y = null;
     var mousedown = false;
     var setposyet = false;
+    var grabbedFirst = false;
     var cur = document.getElementById("cursor");
-
-    document.addEventListener('mousemove', onMouseUpdate, false);
-    document.body.addEventListener('mouseenter', onMouseUpdate, false);
-    document.addEventListener('mousedown', function() {
-        mousedown = true;
-    });
-    document.addEventListener('mouseup', function() {
-        mousedown = false;
-    });
-    // function onMouseStart(e){
-
-
-    // }
+    var hand = document.getElementById("hand");
+    var box = document.getElementById("box");
 
     function onMouseUpdate(e) {
-        if (!e.isTrusted) return false;
-var temp = cur.getAttribute('position');
+
+        // console.log(array);
+
+        // if (!e.isTrusted) return false;
+        var curpos = cur.getAttribute('position');
+
         if (!setposyet) {
-            var width = window.innerWidth || document.body.clientWidth;
-            x = e.pageX;
+            var width = 800;
+            x = array[0].x;
+            y = cur.getAttribute('position').y;
             var truex = ((x - width / 2) / width) * 3;
-            y = e.pageY;
-            cur.setAttribute('position', { x: truex, y: temp.y, z: temp.z });
+            // y = e.pageY;
+            cur.setAttribute('position', { x: truex, y: curpos.y, z: curpos.z });
             // console.log(e, x, width, truex);
             setposyet = true;
         }
 
-        
-        // console.log(temp.x);
+
+        //console.log(curpos.x, curpos.y);
         if (x != null && !mousedown) {
-            //console.log(tempx.x+ (e.pageX - x)/100);
-            cur.setAttribute('position', { x: temp.x + (e.pageX - x) / 300, y: temp.y, z: temp.z });
+            // cur.setAttribute('position', { x: curpos.x + -1 * (e[0].x - x) / 300, y: curpos.y + -1 * (e[0].y - y) /1000, z: curpos.z });
+            cur.setAttribute('position', { x: curpos.x + -1 * (e[0].x - x)  / 300, y: curpos.y, z: curpos.z });
+
+            console.log(e[0].x , curpos.x, -1*(e[0].x - x) / 300);
         }
-        x = e.pageX;
-        y = e.pageY;
+        x = e[0].x;
+        y = e[0].y;
+
+        var handPos = new THREE.Vector3();
+        handPos.setFromMatrixPosition(hand.object3D.matrixWorld);
+
+        var boxPos = new THREE.Vector3();
+        boxPos.setFromMatrixPosition(box.object3D.matrixWorld);
+        //console.log(handPos, boxPos);
+
+        if(!grabbedFirst && Math.abs(handPos.x -boxPos.x) < 0.3){
+            box.setAttribute('position', {x: 0, y: 0, z: -0.75});
+            cur.appendChild(box);
+        }
+
     }
-
-    AFRAME.registerComponent('cursor-listener', {
-        init: function() {
-            this.el.addEventListener('mouseenter', function(evt) {
-                console.log('I was clicked at: ', evt.detail.intersection.point);
-            });
-        }
-    });
-
-
     </script>
 </body>
 </html
