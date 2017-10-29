@@ -7,17 +7,30 @@
 </head>
 
 <body>
-    <a-scene>
-        <a-assets>
-            <img id="boxTexture" src="https://i.imgur.com/mYmmbrp.jpg">
-        </a-assets>
-        <a-box src="#boxTexture" position="0 2 -5" rotation="0 45 45" scale="2 2 2">
-            <a-animation attribute="position" to="0 2.2 -5" direction="alternate" dur="2000" repeat="indefinite"></a-animation>
-        </a-box>
-        <a-camera>
-            <a-cursor></a-cursor>
-        </a-camera>
-        
-    </a-scene>
+<a-scene>
+  <a-assets>
+    <img id="boxTexture" src="https://i.imgur.com/mYmmbrp.jpg">
+    <img id="wall2"
+      src="assets/wall2.png">
+      <img id="wall1"
+      src="assets/wall1.jpg">
+      <img id="front"
+      src="assets/front.jpg">
+      <img id="ceiling"
+      src="assets/ceiling.png">
+      <img id="floor"
+      src="assets/floor.jpg">
+  </a-assets>
+  <a-entity light="type: ambient; color: #BBB"></a-entity>
+<a-entity light="type: point; color: #FFF; intensity: 0.2" position="0 2.5 0.5"></a-entity>
+
+  <a-plane src="#front" height="3" width="4" rotation="0 0 0" position="0 1.5 -2.5"></a-plane>
+<!--   <a-plane color="#BBBBBB" height="30" width="40" rotation="0 0 0" position="0 1.5 -1"></a-plane> -->
+  <a-sky color="#333"></a-sky>
+  <a-plane src="#floor" height="4" width="4" rotation="-90 0 0" position="0 0 -0.5"></a-plane>
+  <a-plane src="#wall2" height="3" width="4" rotation="0 90 0" position="-2 1.5 -0.5"></a-plane>
+   <a-plane src="#wall1" height="3" width="4" rotation="0 -90 0" position="2 1.5 -0.5"></a-plane>
+  <a-plane src="#ceiling" height="4" width="4" rotation="90 0 0" position="0 3.0 -0.5"></a-plane>
+</a-scene>
 </body>
 </html
