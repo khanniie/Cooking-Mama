@@ -26,10 +26,10 @@
    <a-plane src="#wall1" height="6" width="8" rotation="0 -90 0" position="4 4.5 -1"></a-plane>
   <a-plane src="#ceiling" height="8" width="8" rotation="90 0 0" position="0 7.5 -1"></a-plane> -->
         <a-entity>
-            <a-entity camera look-controls>
-  <a-entity geometry="primitive: plane; height: 0.2; width: 0.2" position="0 0 -1"
-            material="color: gray; opacity: 0.5"></a-entity>
-</a-entity>
+            <a-entity camera look-controls position="0 1.5 0">
+                <a-entity cursor position="0 0 -1" geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03" material="color: black; shader: flat">
+                </a-entity>
+            </a-entity>
             <a-entity position="0 0 0">
                 <a-box src="#tableTexture" position="0 1 -1" rotation="0 0 0" scale="2 0.1 1"></a-box>
                 <a-box src="#tableTexture" position="0.95 0.5 -0.55" rotation="0 0 0" scale="0.1 1 0.1"></a-box>
