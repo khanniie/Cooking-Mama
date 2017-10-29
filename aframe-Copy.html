@@ -121,17 +121,22 @@
             <img id="ceiling" src="assets/ceiling.png">
             <img id="floor" src="assets/floor.jpg">
             <img id="tableTexture" src="assets/wood.png">
-            <a-asset-item id="bowl" src="assets/bowl.obj"></a-asset-item>
-            <a-asset-item id="apple-obj" src="assets/Iphonex.obj"></a-asset-item>
-            <a-asset-item id="apple-mtl" src="assets/Iphonex.mtl"></a-asset-item>
-            <a-asset-item id="lefthand" src="assets/lefthand.obj"></a-asset-item>
-            <a-asset-item id="lefthandclose" src="assets/lefthandClose.obj"></a-asset-item>
-            <a-asset-item id="righthandclose" src="assets/righthandClose.obj"></a-asset-item>
-            <a-asset-item id="righthand" src="assets/righthand.obj"></a-asset-item>
-            <a-asset-item id="righthandmtl" src="assets/righthand.mtl"></a-asset-item>
-            <a-asset-item id="righthandclosemtl" src="assets/righthandClose.mtl"></a-asset-item>
-            <a-asset-item id="lefthandmtl" src="assets/lefthand.mtl"></a-asset-item>
-            <a-asset-item id="lefthandclosemtl" src="assets/lefthandClose.mtl"></a-asset-item>
+        <a-asset-item id="bowl" src="assets/Bowl.obj"></a-asset-item>
+        <a-asset-item id="bowlmtl" src="assets/Bowl.mtl"></a-asset-item>
+        <a-asset-item id="apple-obj" src="assets/Iphonex.obj"></a-asset-item>
+        <a-asset-item id="apple-mtl" src="assets/Iphonex.mtl"></a-asset-item>
+        <a-asset-item id="lefthand" src="assets/lefthand.obj"></a-asset-item>
+        <a-asset-item id="lefthandclose" src="assets/lefthandClose.obj"></a-asset-item>
+        <a-asset-item id="righthandclose" src="assets/righthandClose.obj"></a-asset-item>
+        <a-asset-item id="righthand" src="assets/righthand.obj"></a-asset-item>
+        <a-asset-item id="righthandmtl" src="assets/righthand.mtl"></a-asset-item>
+        <a-asset-item id="righthandclosemtl" src="assets/righthandClose.mtl"></a-asset-item>
+        <a-asset-item id="lefthandmtl" src="assets/lefthand.mtl"></a-asset-item>
+        <a-asset-item id="lefthandclosemtl" src="assets/lefthandClose.mtl"></a-asset-item>
+        <a-asset-item id="breadmtl" src="assets/Bread.mtl"></a-asset-item>
+        <a-asset-item id="bread" src="assets/Bread.obj"></a-asset-item>
+        <a-asset-item id="thermos" src="assets/termos.obj"></a-asset-item>
+        <a-asset-item id="thermosmtl" src="assets/termos.mtl"></a-asset-item>
             <!--       <a-asset-item id="breadmtl" src="assets/Bread.mtl"></a-asset-item>
             <a-asset-item id="bread" src="assets/Bread.obj"></a-asset-item> -->
         </a-assets>
@@ -150,10 +155,14 @@
                 <a-box src="#tableTexture" position="-0.95 0.5 -0.55" rotation="0 0 0" scale="0.1 1 0.1"></a-box>
                 <a-box src="#tableTexture" position="0.95 0.5 -1.45" rotation="0 0 0" scale="0.1 1 0.1"></a-box>
                 <a-box src="#tableTexture" position="-0.95 0.5 -1.45" rotation="0 0 0" scale="0.1 1 0.1"></a-box>
-                <a-box cursor-listener id="box" color="#FFFFFF" scale="0.2 0.2 0.2" position="0 1.2 -1"></a-box>
             </a-entity>
             <a-entity light="type: ambient; color: #BBB"></a-entity>
             <a-entity light="type: point; color: #FFF; intensity: 0.2" position="0 5.5 1"></a-entity>
+
+        <a-entity obj-model="obj: #bowl ; mtl: #bowlmtl" rotation="-90 0 0" position="-0.4 1.2 -0.7" scale="0.003 0.003 0.003"></a-entity>
+        <a-entity cursor-listener id="box" obj-model="obj: #bread; mtl: #breadmtl" position="-0.5 1.25 -0.4" scale="0.15 0.15 0.15"></a-entity>
+        <a-entity obj-model="obj: #thermos; mtl: #thermosmtl" position="0.30 1.25 -0.7" scale="0.0025 0.0025 0.0025"></a-entity>
+        <a-entity text-geometry="value: What's up" position = "-1.30 2.5 -2.25" material = "color: pink"></a-entity>
             <a-plane src="#front" height="5" width="7" rotation="0 0 0" position="0 2.5 -4.5"></a-plane>
             <a-sky color="#333"></a-sky>
             <a-plane src="#floor" height="7" width="7" rotation="-90 0 0" position="0 0 -1"></a-plane>
