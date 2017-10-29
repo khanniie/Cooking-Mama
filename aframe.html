@@ -26,8 +26,8 @@
    <a-plane src="#wall1" height="6" width="8" rotation="0 -90 0" position="4 4.5 -1"></a-plane>
   <a-plane src="#ceiling" height="8" width="8" rotation="90 0 0" position="0 7.5 -1"></a-plane> -->
         <a-entity>
-            <a-entity camera look-controls position="0 1.5 0">
-                <a-entity cursor position="0 0 -1" geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03" material="color: black; shader: flat">
+            <a-entity camera look-controls position="0 1.75 0">
+                <a-entity id="cursor" cursor="fuse: true; fuseTimeout: 500" position="0 -0.55 -1" geometry="primitive: sphere; radius: 0.1;" material="color: black; shader: flat">
                 </a-entity>
             </a-entity>
             <a-entity position="0 0 0">
@@ -36,6 +36,7 @@
                 <a-box src="#tableTexture" position="-0.95 0.5 -0.55" rotation="0 0 0" scale="0.1 1 0.1"></a-box>
                 <a-box src="#tableTexture" position="0.95 0.5 -1.45" rotation="0 0 0" scale="0.1 1 0.1"></a-box>
                 <a-box src="#tableTexture" position="-0.95 0.5 -1.45" rotation="0 0 0" scale="0.1 1 0.1"></a-box>
+                <a-box cursor-listener color="FFFFFF" position="0 1.2 -1" scale="0.2 0.2 0.2"></a-box>
             </a-entity>
             <a-entity light="type: ambient; color: #BBB"></a-entity>
             <a-entity light="type: point; color: #FFF; intensity: 0.2" position="0 6.5 1"></a-entity>
@@ -47,5 +48,58 @@
             <a-plane src="#ceiling" height="8" width="8" rotation="90 0 0" position="0 6 -1"></a-plane>
         </a-entity>
     </a-scene>
+    <script>
+    var x = null;
+    var y = null;
+    var mousedown = false;
+    var setposyet = false;
+    var cur = document.getElementById("cursor");
+
+    document.addEventListener('mousemove', onMouseUpdate, false);
+    document.body.addEventListener('mouseenter', onMouseUpdate, false);
+    document.addEventListener('mousedown', function() {
+        mousedown = true;
+    });
+    document.addEventListener('mouseup', function() {
+        mousedown = false;
+    });
+    // function onMouseStart(e){
+
+
+    // }
+
+    function onMouseUpdate(e) {
+        if (!e.isTrusted) return false;
+var temp = cur.getAttribute('position');
+        if (!setposyet) {
+            var width = window.innerWidth || document.body.clientWidth;
+            x = e.pageX;
+            var truex = ((x - width / 2) / width) * 3;
+            y = e.pageY;
+            cur.setAttribute('position', { x: truex, y: temp.y, z: temp.z });
+            // console.log(e, x, width, truex);
+            setposyet = true;
+        }
+
+        
+        // console.log(temp.x);
+        if (x != null && !mousedown) {
+            //console.log(tempx.x+ (e.pageX - x)/100);
+            cur.setAttribute('position', { x: temp.x + (e.pageX - x) / 300, y: temp.y, z: temp.z });
+        }
+        x = e.pageX;
+        y = e.pageY;
+    }
+
+    AFRAME.registerComponent('cursor-listener', {
+        init: function() {
+            this.el.addEventListener('mouseenter', function(evt) {
+                console.log('I was clicked at: ', evt.detail.intersection.point);
+            });
+        }
+    });
+
+
+    </script>
 </body>
 </html
