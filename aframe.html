@@ -19,7 +19,7 @@
 </head>
 
 <body>
-        <video id="video" width="200" height="150" preload playsinline autoplay muted></video>
+    <video id="video" width="200" height="150" preload playsinline autoplay muted></video>
     <canvas id="canvas" width="200" height="150"></canvas>
     <script>
     var video = document.getElementById('video');
@@ -40,23 +40,34 @@
     var blueTrack = new tracking.ColorTracker(['blue']);
     var yellowTrack = new tracking.ColorTracker(['yellow']);
 
+    // navigator.mediaDevices.getUserMedia(constraints).then(function(mediastream) {
+    //     video.srcObject = mediastream;
+    //     video.onloadedmetadata = function(e) {
+    //         video.play();
+    //         console.log(e);
+    //     }
+    // }).catch(function() {
+    //     var constraints = { video: { facingMode: "user" } };
+    //     console.log("no rear camera, using other one");
+    //     //front = -1;
+    //     navigator.mediaDevices.getUserMedia(constraints).then(function(mediastream) {
+    //         video.srcObject = mediastream;
+    //         video.onloadedmetadata = function(e) {
+    //             video.play();
+    //         }
+    //     })
+    // });
     navigator.mediaDevices.getUserMedia(constraints).then(function(mediastream) {
         video.srcObject = mediastream;
         video.onloadedmetadata = function(e) {
             video.play();
             console.log(e);
         }
-    }).catch(function() {
-        var constraints = { video: { facingMode: "user" } };
-        console.log("no rear camera, using other one");
-        //front = -1;
-        navigator.mediaDevices.getUserMedia(constraints).then(function(mediastream) {
-            video.srcObject = mediastream;
-            video.onloadedmetadata = function(e) {
-                video.play();
-            }
-        })
     });
+
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        front = -1;
+    }
 
     tracking.track('video', yellowTrack);
     yellowTrack.on('track', function(event) {
@@ -78,8 +89,8 @@
     blueTrack.on('track', function(event) {
         count2 = 0;
         event.data.forEach(function(rect) {
-            array[1].x = (array[1].x + rect.x)/2;
-            array[1].y = (array[1].y + rect.y)/2;
+            array[1].x = (array[1].x + rect.x) / 2;
+            array[1].y = (array[1].y + rect.y) / 2;
 
             array[1].width = rect.width;
             array[1].height = rect.height;
@@ -107,7 +118,6 @@
             <img id="ceiling" src="assets/ceiling.png">
             <img id="floor" src="assets/floor.jpg">
             <img id="tableTexture" src="assets/wood.png">
-
             <a-asset-item id="bowl" src="assets/bowl.obj"></a-asset-item>
             <a-asset-item id="apple-obj" src="assets/Iphonex.obj"></a-asset-item>
             <a-asset-item id="apple-mtl" src="assets/Iphonex.mtl"></a-asset-item>
@@ -119,7 +129,7 @@
             <a-asset-item id="righthandclosemtl" src="assets/righthandClose.mtl"></a-asset-item>
             <a-asset-item id="lefthandmtl" src="assets/lefthand.mtl"></a-asset-item>
             <a-asset-item id="lefthandclosemtl" src="assets/lefthandClose.mtl"></a-asset-item>
-      <!--       <a-asset-item id="breadmtl" src="assets/Bread.mtl"></a-asset-item>
+            <!--       <a-asset-item id="breadmtl" src="assets/Bread.mtl"></a-asset-item>
             <a-asset-item id="bread" src="assets/Bread.obj"></a-asset-item> -->
         </a-assets>
         <a-entity>
@@ -150,7 +160,7 @@
             <a-plane src="#wall3" height="5" width="7" rotation="0 180 0" position="0 2.5 2.5">
         </a-entity>
     </a-scene>
-        <script>
+    <script>
     var leftx = null;
     var lefty = null;
     var rightx = null;
@@ -185,18 +195,19 @@
         }
 
         if (leftx != null && rightx != null) {
-            leftCur.setAttribute('position', { x: leftcurpos.x + front* (e[0].x - leftx) / 70, y: leftcurpos.y, z: leftcurpos.z });
-            rightCur.setAttribute('position', { x: rightcurpos.x + front* (e[1].x - rightx) / 70, y: rightcurpos.y, z: rightcurpos.z });
+            leftCur.setAttribute('position', { x: leftcurpos.x + front * (e[0].x - leftx) / 70, y: leftcurpos.y, z: leftcurpos.z });
+            rightCur.setAttribute('position', { x: rightcurpos.x + front * (e[1].x - rightx) / 70, y: rightcurpos.y, z: rightcurpos.z });
         }
         leftx = e[0].x;
         lefty = e[0].y;
         rightx = e[1].x;
         righty = e[1].y;
 
-        if(!grabbedFirst)
-        stageOne();
+        if (!grabbedFirst)
+            stageOne();
     }
-    function isIntersect(obj){
+
+    function isIntersect(obj) {
         var rightPos = new THREE.Vector3();
         var leftPos = new THREE.Vector3();
         leftPos.setFromMatrixPosition(leftHand.object3D.matrixWorld);
@@ -204,18 +215,16 @@
 
         var boxPos = new THREE.Vector3();
         boxPos.setFromMatrixPosition(obj.object3D.matrixWorld);
-        if((Math.abs(rightPos.x - boxPos.x) < 0.3)){
+        if ((Math.abs(rightPos.x - boxPos.x) < 0.3)) {
             return rightCur;
-        }
-        else if(Math.abs(leftPos.x - boxPos.x) < 0.3){
+        } else if (Math.abs(leftPos.x - boxPos.x) < 0.3) {
             return leftCur;
-        }
-        else{
+        } else {
             return false;
         }
     }
 
-    function stageOne(){
+    function stageOne() {
 
         var res = isIntersect(box);
         if (res != false) {
@@ -223,9 +232,8 @@
             res.appendChild(box);
             grabbedFirst = true;
         }
-        
-    }
 
+    }
     </script>
 </body>
 </html
