@@ -19,7 +19,13 @@
         <a-asset-item id="apple-obj" src="assets/Iphonex.obj"></a-asset-item>
         <a-asset-item id="apple-mtl" src="assets/Iphonex.mtl"></a-asset-item>
         <a-asset-item id="lefthand" src="assets/lefthand.obj"></a-asset-item>
+        <a-asset-item id="lefthandclose" src="assets/lefthandClose.obj"></a-asset-item>
+        <a-asset-item id="righthandclose" src="assets/righthandClose.obj"></a-asset-item>
         <a-asset-item id="righthand" src="assets/righthand.obj"></a-asset-item>
+        <a-asset-item id="righthandmtl" src="assets/righthand.mtl"></a-asset-item>
+        <a-asset-item id="righthandclosemtl" src="assets/righthandClose.mtl"></a-asset-item>
+        <a-asset-item id="lefthandmtl" src="assets/lefthand.mtl"></a-asset-item>
+        <a-asset-item id="lefthandclosemtl" src="assets/lefthandClose.mtl"></a-asset-item>
 
     </a-assets>
 
@@ -46,13 +52,13 @@
         </a-entity>
         <a-entity obj-model="obj: #bowl"  position="-0.25 1.2 -0.75" scale="0.001 0.001 0.001"></a-entity>
         <a-entity obj-model="obj: #apple-obj; mtl: #apple-mtl"  position="0.25 1.2 -0.75" scale="0.001 0.001 0.001"></a-entity>
-        <a-entity obj-model="obj: #lefthand" position="-0.25 1.2 -0.25" scale="0.04 0.04 0.04"></a-entity>
-        <a-entity obj-model="obj: #righthand" position="0.25 1.2 -0.25" scale="0.04 0.04 0.04"></a-entity>
+        <a-entity obj-model="obj: #lefthand; mtl: #lefthandmtl" position="-0.25 1.2 -0.25" scale="0.04 0.04 0.04"></a-entity>
+        <a-entity obj-model="obj: #righthand; mtl: #righthandmtl" position="0.25 1.2 -0.25" scale="0.04 0.04 0.04"></a-entity>
 
         <a-entity light="type: ambient; color: #BBB"></a-entity>
         <a-entity light="type: point; color: #FFF; intensity: 0.2" position="0 6.5 1"></a-entity>
         <a-plane src="#front" height="6" width="8" rotation="0 0 0" position="0 3 -5"></a-plane>
-        <a-sky color="#333"></a-sky>        <a-asset-item id="bowl" src="assets/Toilet.obj"></a-asset-item>
+        <a-sky color="#333"></a-sky>        <!--<a-asset-item id="bowl" src="assets/Toilet.obj"></a-asset-item> -->
 
         <a-plane src="#floor" height="8" width="8" rotation="-90 0 0" position="0 0 -1"></a-plane>
         <a-plane src="#wall2" height="6" width="8" rotation="0 90 0" position="-4 3 -1"></a-plane>
