@@ -26,22 +26,22 @@
     </script>
     <a-scene>
         <a-assets>
-            <img id="wall2" src="assets/wall2.jpg">
-            <img id="wall1" src="assets/wall2.jpg">
-            <img id="wall3" src="assets/wall2.jpg">
+            <img id="wall2" src="assets/wallrightleft.jpg">
+            <img id="wall1" src="assets/wallrightleft.jpg">
+            <img id="wall3" src="assets/wallrightleft.jpg">
             <img id="front" src="assets/front.jpg">
             <img id="ceiling" src="assets/ceiling.png">
             <img id="floor" src="assets/floor.jpg">
             <img id="tableTexture" src="assets/wood.png">
             <a-asset-item id="bowl" src="assets/Bowl.obj"></a-asset-item>
             <a-asset-item id="apple-obj" src="assets/Iphonex.obj"></a-asset-item>
-            <a-asset-item id="apple-mtl" src="assets/Iphonex.mtl"></a-asset-item>
+            <!-- <a-asset-item id="apple-mtl" src="assets/Iphonex.mtl"></a-asset-item> -->
             <a-asset-item id="lefthand" src="assets/lefthand.obj"></a-asset-item>
             <a-asset-item id="lefthandclose" src="assets/lefthandClose.obj"></a-asset-item>
-            <a-asset-item id="righthandclose" src="assets/righthandClose.obj"></a-asset-item>
+   <!--          <a-asset-item id="righthandclose" src="assets/righthandClose.obj"></a-asset-item>
             <a-asset-item id="righthand" src="assets/righthand.obj"></a-asset-item>
             <a-asset-item id="righthandmtl" src="assets/righthand.mtl"></a-asset-item>
-            <a-asset-item id="righthandclosemtl" src="assets/righthandClose.mtl"></a-asset-item>
+            <a-asset-item id="righthandclosemtl" src="assets/righthandClose.mtl"></a-asset-item> -->
             <a-asset-item id="lefthandmtl" src="assets/lefthand.mtl"></a-asset-item>
             <a-asset-item id="lefthandclosemtl" src="assets/lefthandClose.mtl"></a-asset-item>
             <!--       <a-asset-item id="breadmtl" src="assets/Bread.mtl"></a-asset-item>
@@ -52,9 +52,6 @@
                 <a-entity id="leftCursor" position="-0.5 -0.55 -0.5">
                     <a-entity id="leftHand" position="0 0 -0.5" obj-model="obj: #lefthand; mtl: #lefthandmtl" position="-0.25 1.2 -0.25" scale="0.05 0.05 0.05" rotation="-80 -20 0"></a-entity>
                 </a-entity>
-                <a-entity id="rightCursor" position="0.5 -0.55 -0.5">
-                    <a-entity id="rightHand" position="0 0 -0.5" obj-model="obj: #righthand; mtl: #righthandmtl" position="-0.25 1.2 -0.25" scale="0.05 0.05 0.05" rotation="-80 20 0"></a-entity>
-                </a-entity>
             </a-entity>
             <a-entity position="0 0 0" id="table">
                 <a-box src="#tableTexture" position="0 1 -1" rotation="0 0 0" scale="2 0.1 1"></a-box>
@@ -63,8 +60,12 @@
                 <a-box src="#tableTexture" position="0.95 0.5 -1.45" rotation="0 0 0" scale="0.1 1 0.1"></a-box>
                 <a-box src="#tableTexture" position="-0.95 0.5 -1.45" rotation="0 0 0" scale="0.1 1 0.1"></a-box>
                 <a-entity id="bowl-area" position = "-0.7 1.035 -0.75" >
-                <a-entity obj-model="obj: #bowl;" id="bowl-goal" rotation="-90 0 0" scale="0.005 0.005 0.005"></a-entity></a-entity>
-                <a-entity obj-model="obj: #apple-obj; mtl: #apple-mtl;" id="apple" rotation="-90 0 0" position="0.7 1.3 -0.75" scale="0.0005 0.0005 0.0005"></a-entity>
+                <a-entity obj-model="obj: #bowl; mtl: #lefthandmtl" id="bowl-goal" rotation="-90 0 0" scale="0.005 0.005 0.005"></a-entity></a-entity>
+                <a-entity id="apple" position="0.5 1.3 -0.75" scale="0.07 0.07 0.07">
+                    <a-sphere position="0 0 0" scale="1 1 1" color="#FF4444"></a-sphere>
+                    <a-tetrahedron color="#D2691E" radius="0.5" position="0 1.1 0" scale="0.8 1.2 0.8"></a-tetrahedron>
+                    <a-tetrahedron color="#AAFFAA" radius="0.5" position="0.2 1.1 0" rotation="45 45 45" scale="0.4 1.2 0.4"></a-tetrahedron>
+                </a-entity>
                 
                 <!--          <a-box cursor-listener id="box" color="#FFFFFF" scale="0.2 0.2 0.2" position="0 1.2 -1"></a-box> -->
             </a-entity>
@@ -82,49 +83,34 @@
        <script>
     var leftx = null;
     var lefty = null;
-    var rightx = null;
-    var righty = null;
+    // var rightx = null;
+    // var righty = null;
     var setposyet = false;
     var grabbedFirst = false;
     var grabbedSecond = false;
     var inRightHand = false;
     var leftCur = document.getElementById("leftCursor");
-    var rightCur = document.getElementById("rightCursor");
+    // var rightCur = document.getElementById("rightCursor");
     var leftHand = document.getElementById("leftHand");
-    var rightHand = document.getElementById("rightHand");
+    // var rightHand = document.getElementById("rightHand");
     var apple = document.getElementById("apple");
     var bowl = document.getElementById("bowl-goal");
     var bowlarea = document.getElementById("bowl-area");
 
     function onMouseUpdate(e) {
         var leftcurpos = leftCur.getAttribute('position');
-        var rightcurpos = rightCur.getAttribute('position');
 
-        // if (!setposyet) {
-        //     var width = 200;
-        //     leftx = array[0].x;
-        //     lefty = leftCur.getAttribute('position').y;
-        //     var truexleft = ((leftx - width / 2) / width) * 3;
-
-        //     leftCur.setAttribute('position', { x: truexleft, y: leftcurpos.y, z: leftcurpos.z });
-
-        //     rightx = array[1].x;
-        //     righty = rightCur.getAttribute('position').y;
-        //     var truexright = ((rightx - width / 2) / width) * 3;
-
-        //     rightCur.setAttribute('position', { x: truexright, y: rightcurpos.y, z: rightcurpos.z });
-
-        //     setposyet = true;
-        // }
-
-        if (leftx != null && rightx != null) {
-            leftCur.setAttribute('position', { x: leftcurpos.x + invert* (e[0].x - leftx) / 50, y: leftcurpos.y, z: leftcurpos.z });
-            rightCur.setAttribute('position', { x: rightcurpos.x + invert*(e[1].x - rightx) / 50, y: rightcurpos.y, z: rightcurpos.z });
+        if (leftx != null) {
+            var tempx = leftcurpos.x + invert* (e[0].x - leftx) / 50;
+            if(tempx < -1) tempx = -1;
+            if(tempx > 1) tempx = 1;
+            leftCur.setAttribute('position', { x: tempx, y: leftcurpos.y, z: leftcurpos.z });
+            // rightCur.setAttribute('position', { x: rightcurpos.x + invert*(e[1].x - rightx) / 50, y: rightcurpos.y, z: rightcurpos.z });
         }
         leftx = e[0].x;
         lefty = e[0].y;
-        rightx = e[1].x;
-        righty = e[1].y;
+        // rightx = e[1].x;
+        // righty = e[1].y;
 
         if (!grabbedFirst)
             stageOne();
@@ -133,17 +119,14 @@
     }
 
     function isIntersect(obj) {
-        var rightPos = new THREE.Vector3();
+        // var rightPos = new THREE.Vector3();
         var leftPos = new THREE.Vector3();
         leftPos.setFromMatrixPosition(leftHand.object3D.matrixWorld);
-        rightPos.setFromMatrixPosition(rightHand.object3D.matrixWorld);
+        // rightPos.setFromMatrixPosition(rightHand.object3D.matrixWorld);
 
         var boxPos = new THREE.Vector3();
         boxPos.setFromMatrixPosition(obj.object3D.matrixWorld);
-        if ((Math.abs(rightPos.x - boxPos.x) < 0.2)) {
-            inRightHand = true;
-            return rightCur;
-        } else if (Math.abs(leftPos.x - boxPos.x) < 0.2) {
+        if (Math.abs(leftPos.x - boxPos.x) < 0.2) {
             return leftCur;
         } else {
             return false;
@@ -155,7 +138,8 @@
         var res = isIntersect(apple);
         if (res != false) {
             console.log("!!");
-            apple.setAttribute('position', { x: 0, y: 0, z: -0.75 });
+            apple.setAttribute('position', { x: 0, y: -0.05, z: -0.55});
+            apple.setAttribute('rotation', {x:0, y:0, z:0});
             res.appendChild(apple);
             grabbedFirst = true;
         }
@@ -165,11 +149,9 @@
         var res= isIntersect(bowl);
 
         if (res != false){
-            if(res == rightCur && !inRightHand){return};
-            if(res == leftCur && inRightHand){return};
 
-            apple.setAttribute('position', {x:0.45, y:0.1, z:-0.04 });
-            apple.setAttribute('rotation', {x:0, y:0, z:0});
+            apple.setAttribute('position', {x:0.4, y:0.2, z:-0.2});
+            apple.setAttribute('rotation', {x:45, y:0, z:45});
             bowlarea.appendChild(apple);
             console.log("adfads ");
             grabbedSecond = true;
@@ -211,20 +193,6 @@
             }
         })
     });
-    // navigator.mediaDevices.getUserMedia(constraints).then(function(mediastream) {
-    //     video.srcObject = mediastream;
-    //     video.onloadedmetadata = function(e) {
-    //         video.play();
-    //         console.log(e);
-    //     }
-    // });
-
-    // if ((navigator.userAgent).indexOf("Mobile"))
-    // {
-    //     alert("you're on mobile!");
-    //     front = -1;
-    // }
-
     tracking.track('video', yellowTrack);
     yellowTrack.on('track', function(event) {
         count = 0;
@@ -239,25 +207,6 @@
             onMouseUpdate(array);
         }
     });
-
-    //not tracking blue yet! test it please
-    tracking.track('video', blueTrack);
-    blueTrack.on('track', function(event) {
-        count2 = 0;
-        event.data.forEach(function(rect) {
-            array[1].x = (array[1].x + rect.x) / 2;
-            array[1].y = (array[1].y + rect.y) / 2;
-
-            array[1].width = rect.width;
-            array[1].height = rect.height;
-            count2++
-
-        });
-        if (count == 1) {
-            onMouseUpdate(array);
-        }
-    });
-
     function Rectangle(x, y, width, height) {
         this.height = height;
         this.width = width;
