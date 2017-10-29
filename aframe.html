@@ -22,27 +22,30 @@
     <video id="video" width="200" height="150" preload playsinline autoplay muted></video>
     <canvas id="canvas" width="200" height="150"></canvas>
      <script>
-<<<<<<< HEAD
-=======
     var video = document.getElementById('video');
     var canvas = document.getElementById('canvas');
     var context = canvas.getContext('2d');
     screen.orientation.lock('landscape').catch(function() {});
     var constraints = { video: { facingMode: "environment" } };
+        function Rectangle(x, y, width, height) {
+        this.height = height;
+        this.width = width;
+        this.x = x;
+        this.y = y;
+    }
 
     var array = [new Rectangle(0, 0, 0, 0), new Rectangle(0, 0, 0, 0)];
     var invert = -1;
 
-    tracking.ColorTracker.registerColor('blue', function(r, g, b) {
-        if ((r < 80 && g < 120 && (b > r + g || b > 180))) {
+    tracking.ColorTracker.registerColor('hotpink', function(r, g, b) {
+        if ((r < 255 && g < 20 && b > 147)) {
             return true;
         }
         return false;
     });
-    var blueTrack = new tracking.ColorTracker(['cyan']);
+    var blueTrack = new tracking.ColorTracker(['hotpink']);
     var yellowTrack = new tracking.ColorTracker(['yellow']);
 
-<<<<<<< HEAD
     // navigator.mediaDevices.getUserMedia(constraints).then(function(mediastream) {
     //     video.srcObject = mediastream;
     //     video.onloadedmetadata = function(e) {
@@ -61,16 +64,11 @@
     //     })
     // });
     //
-=======
->>>>>>> a219f79bce42dc83af9a6eae79dd8beb55353067
-    navigator.mediaDevices.getUserMedia(constraints).then(function(mediastream) {
+navigator.mediaDevices.getUserMedia(constraints).then(function(mediastream) {
         video.srcObject = mediastream;
         video.onloadedmetadata = function(e) {
             video.play();
             console.log(e);
-<<<<<<< HEAD
-        };
-=======
         }
     }).catch(function() {
         var constraints = { video: { facingMode: "user" } };
@@ -82,7 +80,6 @@
                 video.play();
             }
         })
->>>>>>> a219f79bce42dc83af9a6eae79dd8beb55353067
     });
     // navigator.mediaDevices.getUserMedia(constraints).then(function(mediastream) {
     //     video.srcObject = mediastream;
@@ -97,7 +94,6 @@
     //     alert("you're on mobile!");
     //     front = -1;
     // }
->>>>>>> origin/master
 
     </script>
     <a-scene>
@@ -334,12 +330,7 @@
         }
     });
 
-    function Rectangle(x, y, width, height) {
-        this.height = height;
-        this.width = width;
-        this.x = x;
-        this.y = y;
-    }
+
     </script>
 </body>
 </html

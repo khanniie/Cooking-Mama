@@ -138,8 +138,9 @@
         var res = isIntersect(apple);
         if (res != false) {
             console.log("!!");
-            apple.setAttribute('position', { x: 0, y: -0.05, z: -0.55});
-            apple.setAttribute('rotation', {x:0, y:0, z:0});
+            apple.setAttribute('position', { x: 0, y: -0.1, z: -0.65});
+            leftHand.setAttribute('obj-model', "obj: #lefthandclose; mtl: #lefthandclosemtl");
+            apple.setAttribute('rotation', {x:0, y:90, z:0});
             res.appendChild(apple);
             grabbedFirst = true;
         }
@@ -153,6 +154,7 @@
             apple.setAttribute('position', {x:0.4, y:0.2, z:-0.2});
             apple.setAttribute('rotation', {x:45, y:0, z:45});
             bowlarea.appendChild(apple);
+            leftHand.setAttribute('obj-model', "obj: #lefthand; mtl: #lefthandmtl");
             console.log("adfads ");
             grabbedSecond = true;
         }
@@ -167,13 +169,13 @@
     var array = [new Rectangle(0, 0, 0, 0), new Rectangle(0, 0, 0, 0)];
     var invert = -1;
 
-    tracking.ColorTracker.registerColor('blue', function(r, g, b) {
-        if ((r < 80 && g < 120 && (b > r + g || b > 180))) {
+    tracking.ColorTracker.registerColor('hotpink', function(r, g, b) {
+        if ((r < 255 && g < 20 && (b > r + g || b > 147))) {
             return true;
         }
         return false;
     });
-    var blueTrack = new tracking.ColorTracker(['cyan']);
+    var blueTrack = new tracking.ColorTracker(['hotpink']);
     var yellowTrack = new tracking.ColorTracker(['yellow']);
 
     navigator.mediaDevices.getUserMedia(constraints).then(function(mediastream) {
